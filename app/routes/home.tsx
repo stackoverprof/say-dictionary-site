@@ -69,7 +69,7 @@ export default function Home() {
           <div className="animate-fade-in">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-400 text-sm mb-8">
               <span className="w-2 h-2 rounded-full bg-violet-500 animate-pulse" />
-              v1.2.2
+              v1.3.0
             </div>
           </div>
 
@@ -114,7 +114,7 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-center mb-12">
             Simple by design
           </h2>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6">
             <FeatureCard
               title="LLM-ready format"
               description="The dictionary.json format is designed to be handed directly to an AI for translation. No complex tooling needed."
@@ -122,6 +122,10 @@ export default function Home() {
             <FeatureCard
               title="URL-based routing"
               description="Language detection from URL path segments. /is/about for Icelandic, /about for default language."
+            />
+            <FeatureCard
+              title="ICU message formatting"
+              description="Full support for plurals, ordinals, dates, and number formatting with cached formatters for performance."
             />
             <FeatureCard
               title="Zero config"
@@ -151,7 +155,8 @@ init(dictionary);`}</CodeBlock>
               <p className="text-sm text-zinc-500 mb-2">2. Use anywhere</p>
               <CodeBlock>{`import { say } from 'say-dictionary';
 
-<h1>{say("Welcome to our site")}</h1>`}</CodeBlock>
+<h1>{say("Welcome to our site")}</h1>
+<p>{say("You have {count, plural, one {# item} other {# items}}", { count: 3 })}</p>`}</CodeBlock>
             </div>
 
             <div>
@@ -177,13 +182,53 @@ init(dictionary);`}</CodeBlock>
           <CodeBlock>{`{
   "Welcome to our site": { "en": "Welcome to our site", "is": "" },
   "Get started": { "en": "Get started", "is": "" },
-  "Documentation": { "en": "Documentation", "is": "" }
+  "You have {count, plural, one {# item} other {# items}}": {
+    "en": "You have {count, plural, one {# item} other {# items}}",
+    "is": ""
+  }
 }`}</CodeBlock>
 
           <p className="text-center text-zinc-500 mt-6 text-sm">
-            First language gets the key as default. Empty strings are waiting
-            for translation.
+            First language gets the key as default. ICU patterns are preserved
+            for each language. Empty strings are waiting for translation.
           </p>
+        </div>
+      </section>
+
+      {/* ICU Formatting */}
+      <section className="py-20 px-6 border-t border-white/5">
+        <div className="max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-400 text-sm mb-6">
+            New in v1.3.0
+          </div>
+          <h2 className="text-3xl font-bold mb-4">ICU Message Formatting</h2>
+          <p className="text-zinc-400 mb-12">
+            Full ICU MessageFormat support for plurals, ordinals, dates, and
+            numbers — powered by{" "}
+            <code className="text-violet-400">intl-messageformat</code>.
+          </p>
+
+          <div className="space-y-6">
+            <div>
+              <p className="text-sm text-zinc-500 mb-2">Plurals</p>
+              <CodeBlock>{`say("You have {count, plural, one {# pizza} other {# pizzas}}", { count: 5 })
+// → "You have 5 pizzas"`}</CodeBlock>
+            </div>
+
+            <div>
+              <p className="text-sm text-zinc-500 mb-2">Ordinals</p>
+              <CodeBlock>{`say("You finished {place, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}", { place: 3 })
+// → "You finished 3rd"`}</CodeBlock>
+            </div>
+
+            <div>
+              <p className="text-sm text-zinc-500 mb-2">
+                Dates & numbers
+              </p>
+              <CodeBlock>{`say("Event on {date, date, ::MMMM d}", { date: new Date() })
+// → "Event on February 20"`}</CodeBlock>
+            </div>
+          </div>
         </div>
       </section>
 
